@@ -10,11 +10,11 @@ import (
 func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /health", healthHandler)
-	mux.HandleFunc("POST /game", controllers.AddGameHandler)            // will have user details and return otp
-	mux.HandleFunc("POST /game/{id}/join", controllers.JoinGameHandler) //will have otp and user details and return done/not
-	mux.HandleFunc("POST /game/{id}/move", controllers.MoveHandler)     //perform move in game by user
-	mux.HandleFunc("GET /game/{id}", controllers.GetGameData)
-	mux.HandleFunc("GET /game/{id}/events", controllers.HandleSSE)
+	mux.HandleFunc("POST /api/game", controllers.AddGameHandler)            // will have user details and return otp
+	mux.HandleFunc("POST /api/game/{id}/join", controllers.JoinGameHandler) //will have otp and user details and return done/not
+	mux.HandleFunc("POST /api/game/{id}/move", controllers.MoveHandler)     //perform move in game by user
+	mux.HandleFunc("GET /api/game/{id}", controllers.GetGameData)
+	mux.HandleFunc("GET /api/game/{id}/events", controllers.HandleSSE)
 	fmt.Println("server running at port 8080")
 	err := http.ListenAndServe(":8080", cors(mux))
 	if err != nil {
