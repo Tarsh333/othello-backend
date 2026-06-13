@@ -16,11 +16,24 @@ func main() {
 	mux.HandleFunc("GET /game/{id}", controllers.GetGameData)
 	mux.HandleFunc("GET /game/{id}/events", controllers.HandleSSE)
 	fmt.Println("server running at port 8080")
-	err := http.ListenAndServe(":8080", mux)
+	err := http.ListenAndServe(":8080", cors(mux))
 	if err != nil {
 		fmt.Println("server not running at port 8080")
 	}
 }
+func cors(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+		next.ServeHTTP(w, r)
+	})
+}
+
 func healthHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("content-type", "application/json")
 	resp := map[string]string{
